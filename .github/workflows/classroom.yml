@@ -1,8 +1,7 @@
 name: Autograding Tests
-on:
-  - push
-  - workflow_dispatch
-  - repository_dispatch
+'on':
+- push
+- repository_dispatch
 permissions:
   checks: write
   actions: read
@@ -14,26 +13,33 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      # This is where you place your autograding tests
-      # For more information on this runner, see the documentation at: https://github.com/classroom-resources/autograding-io-grader
-      #
-      # For example, you could run a test suite like this:
-      # - name: Run tests
-      #   uses: classroom-resources/autograding-io-grader@v1
-      #     with:
-      #       test-name: Addition Test
-      #       id: addition-test
-      #       command: "./bin/add.sh"
-      #       input: 1 2
-      #       expected-output: 3
-      #       comparison-method: exact
-      #       timeout: 10
+    - name: secondary test
+      id: secondary-test
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: secondary test
+        setup-command: ''
+        command: java TempConverter
+        input: '212'
+        expected-output: '100.0'
+        comparison-method: contains
+        timeout: 1
+    - name: main test
+      id: main-test
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: main test
+        setup-command: ''
+        command: bash test.sh
+        input: ''
+        expected-output: ''
+        comparison-method: exact
+        timeout: 10
+        max-score: 80
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
-      # For more information on this runner, see the documentation at https://github.com/classroom-resources/autograding-grading-reporter
-      # To output the results of the tests, you can use the
-      # autograding-grading-reporter action like this:
-      # env:
-      # ADDITION-TEST_RESULTS: "${{ steps.addition - test.outputs.result }}"
-      #     with:
-      #         runners: addition-test
+      env:
+        SECONDARY-TEST_RESULTS: "${{steps.secondary-test.outputs.result}}"
+        MAIN-TEST_RESULTS: "${{steps.main-test.outputs.result}}"
+      with:
+        runners: secondary-test,main-test
