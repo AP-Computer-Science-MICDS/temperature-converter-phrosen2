@@ -57,3 +57,11 @@ The last test is hidden. For now, you can assume that if your code passes the fi
 | `test5`      | Checks the program with an input of -32°F                |
 | `hiddenTest` | Checks the program with an input unknown to the student  |
 | `checkHeader`| Checks to see if the header is on top of the code        |
+
+---
+
+## Running Tests
+
+Type the following and then hit enter in your Terminal window in Github Codespaces to run the given tests:
+
+bash test.sh
